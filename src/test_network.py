@@ -1,7 +1,7 @@
 import mnist_loader
 # import network2_mod as network
 # import network2 as network
-import network_mod_py36 as network
+import network_py36 as network
 
 training_data, validation_data, test_data = mnist_loader.load_data_wrapper()
 

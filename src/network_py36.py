@@ -22,14 +22,14 @@ import numpy as np
 class QuadraticCost(object):
 
     @staticmethod
-    def fn(a, y, w, lmbda):
+    def fn(a, y, w = None, lmbda = None):
         """Return the quadratic cost associated with an output "a" and desired output "y".
         the w and lmbda part is for the L1 regularization implement which will be used later.
         """
         return 0.5*np.linalg.norm(a-y)**2
 
     @staticmethod
-    def delta(z, a, y, w, lmbda):
+    def delta(z, a, y, w = None, lmbda = None):
         """Return the error delta of the quadratic cost from the output layer."""
         return (a-y) * sigmoid_prime(z)
 
@@ -37,7 +37,7 @@ class QuadraticCost(object):
 class CrossEntropyCost(object):
 
     @staticmethod
-    def fn(a, y, w, lmbda):
+    def fn(a, y, w = None, lmbda = None):
         """Return the cross entropy cost associated with an output "a" 
         and desired output "y".
         the w and lmbda part is for the L1 regularization implement which will be used later.
@@ -46,7 +46,7 @@ class CrossEntropyCost(object):
         return np.sum(np.nan_to_num(-y*np.log(a)-(1-y)*np.log(1-a)))
 
     @staticmethod
-    def delta(z, a, y, w, lmbda):
+    def delta(z, a, y, w = None, lmbda = None):
         """Return the error delta of the cross entropy costo from the output layer.
 
         """
@@ -56,14 +56,14 @@ class L1Regularization(object):
     """docstring for L1Regularization"""
 
     @staticmethod
-    def fn(a, y, w, lmbda):
+    def fn(a, y, w = None, lmbda = None):
         """Return the L1 regularization cost associated with an output "a" and desired output "y".
 
         """
         return 0.5*np.linalg.norm(a-y)**2+(lmbda*np.mean(w))
 
     @staticmethod
-    def delta(z, a, y, w, lmbda):
+    def delta(z, a, y, w = None, lmbda = None):
         """Return the error delta from the output layer.
         delta is the derivative of fn cost. Will be later checked."""
         return (a-y) * sigmoid_prime(z) + lmbda*np.mean(np.sign(w))
@@ -142,19 +142,19 @@ class Network(object):
         evaluation data at the end of each epoch. Note that the lists
         are empty if the corresponding flag is not set.
 
+        From Michael Nielsens original code xrange changed to range for
+        python 3.6.
+
         """
-        if evaluation_data: 
-            evaluation_data = list(evaluation_data)
-            n_data = len(evaluation_data)
-            
+        if evaluation_data: n_data = len(evaluation_data)
         n = len(training_data)
         evaluation_cost, evaluation_accuracy = [], []
         training_cost, training_accuracy = [], []
-        for j in xrange(epochs):
+        for j in range(epochs):
             random.shuffle(training_data)
             mini_batches = [
                 training_data[k:k+mini_batch_size]
-                for k in xrange(0, n, mini_batch_size)]
+                for k in range(0, n, mini_batch_size)]
             for mini_batch in mini_batches:
                 self.update_mini_batch(
                     mini_batch, eta, lmbda, len(training_data))
@@ -227,7 +227,7 @@ class Network(object):
         # second-last layer, and so on.  It's a renumbering of the
         # scheme in the book, used here to take advantage of the fact
         # that Python can use negative indices in lists.
-        for l in xrange(2, self.num_layers):
+        for l in range(2, self.num_layers):
             z = zs[-l]
             sp = sigmoid_prime(z)
             delta = np.dot(self.weights[-l+1].transpose(), delta) * sp
@@ -334,11 +334,11 @@ class Network(object):
         n = len(training_data)
         evaluation_cost, evaluation_accuracy = [], []
         training_cost, training_accuracy = [], []
-        for j in xrange(epochs):
+        for j in range(epochs):
             random.shuffle(training_data)
             mini_batches = [
                 training_data[k:k+mini_batch_size]
-                for k in xrange(0, n, mini_batch_size)]
+                for k in range(0, n, mini_batch_size)]
             for mini_batch in mini_batches:
                 self.update_mini_batch(
                     mini_batch, eta, lmbda, len(training_data))
